@@ -513,6 +513,27 @@
     *{ animation:none !important; transition:none !important; }
   }
 </style>
+<style id="kobun-patch2">
+.round-btn .dg{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.62rem;line-height:1.45;color:var(--ink-soft);opacity:.75;margin-top:6px;white-space:normal}
+.round-btn.weak-btn .n{color:var(--ai)}
+.round-btn.weak-btn:disabled{animation:none;opacity:.45;transform:none;cursor:default}
+.rounds-header .hd-r{margin-left:auto;display:flex;gap:8px}
+.reveal-btn{font-size:1.05rem;padding:14px 38px;bottom:calc(52px + env(safe-area-inset-bottom,0px))}
+.star-btn{position:absolute;right:calc(18px + env(safe-area-inset-right,0px));top:calc(64px + env(safe-area-inset-top,0px));z-index:6;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:var(--card);color:var(--gold);font-size:1.3rem;line-height:1;cursor:pointer;padding:0}
+.star-btn.on{background:var(--shu);border-color:var(--shu);color:#fff}
+.weak-title{display:block;margin:18px auto 0;background:var(--card);border:1px solid var(--gold);color:var(--shu-deep);font-family:inherit;font-weight:700;font-size:.85rem;letter-spacing:.1em;padding:10px 18px;border-radius:3px;cursor:pointer}
+.weak-title:disabled{opacity:.4;cursor:default}
+#searchOverlay{align-items:flex-start;z-index:30}
+#searchOverlay .list-panel{border-top:0;border-bottom:3px double var(--gold);border-radius:0 0 14px 14px;max-height:85%;transform:translateY(-24px)}
+#searchOverlay.open .list-panel{transform:none}
+.list-panel-header input{flex:1;min-width:0;margin-right:12px;padding:10px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:1rem;border-radius:4px}
+.sr-empty{grid-column:1/-1;margin:8px 2px;font-size:.8rem;color:var(--ink-soft)}
+.round-cell{display:flex;flex-direction:column;gap:6px}
+.weak-sub{background:var(--card);border:1px solid var(--line);color:var(--ai);font-family:inherit;font-weight:700;font-size:.74rem;letter-spacing:.04em;padding:8px 4px;border-radius:2px;cursor:pointer}
+.weak-sub:not(:disabled):hover{border-color:var(--ai)}
+.weak-sub:disabled{opacity:.4;cursor:default}
+@media (max-width:480px){.progress-label{display:none}}
+</style>
 </head>
 <body>
 
@@ -605,6 +626,7 @@ const ROUNDS = [
  {w:"いそぎ", pos:"名", mean:"準備・急ぐこと", expl:"何かのために急いで用意を整えることを指す名詞。", mne:"『急ぎ』＝急いで行う『準備』と覚える。", ex:{t:"旅のいそぎをす。",tr:"旅の準備をする。"}},
  {w:"いたく", pos:"副", mean:"ひどく・たいそう", expl:"程度の甚だしさを表す副詞。下に打消を伴うと『たいして～ない』となる。", mne:"『甚く（いたく）』＝『痛いほど』ひどく、と語感で覚える。", ex:{t:"いたく心細し。",tr:"ひどく心細い。"}},
  {w:"いたづらなり", pos:"形動", mean:"むなしい・無駄だ・することがない", expl:"現代語『いたずら（悪ふざけ）』とは異なり、『空しい・無為だ』を表す。", mne:"『徒（いたづら）』＝実がない→『むなしい・無駄』と覚える。", ex:{t:"いたづらに月日を過ぐす。",tr:"むなしく月日を過ごす。"}},
+ {w:"いつく", pos:"動（四段）", mean:"大切に育てる・かしずく／（神に）斎き仕える", expl:"『斎く（心身を清めて神に仕える）』と『傅く（大切に世話をする）』の二つの漢字が当たる語。入試では『大切に育てる』の意が問われやすい。", mne:"『かしづく』と同じ仲間（大切に育てる）と覚え、神に仕える意味はおまけで押さえる。", ex:{t:"姫君をいつきたまふ。",tr:"姫君を大切にお育てになる。"}},
  {w:"いつしか", pos:"副", mean:"早く～したい（願望）／いつの間にか", expl:"下に願望表現を伴えば『早く～したい』、単独では『いつの間にか』の意。", mne:"『いつ＋しか（早く）』で『早くそうなってほしい』という気持ちを表す。", ex:{t:"いつしか梅咲かなむ。",tr:"早く梅が咲いてほしい。"}},
  {w:"いと（いとど）", pos:"副", mean:"たいそう（／ますます）", expl:"『いと』は程度の甚だしさ、『いとど』はそれがさらに強まる『いよいよ・ますます』。", mne:"『いと』＝とても、『いとど』＝『いと』が『ど』（重なる）でさらに強調、と覚える。", ex:{t:"いとど悲しさまさる。",tr:"ますます悲しさが増す。"}},
  {w:"いとほし", pos:"形", mean:"かわいそうだ・いとおしい・気の毒だ", expl:"相手への同情や愛情から生まれる、心が痛むような気持ちを表す。", mne:"現代語『いとおしい』の語源で、『かわいそう＋愛しい』の両面を持つ。", ex:{t:"いとほしと思す。",tr:"かわいそうだとお思いになる。"}},
@@ -619,6 +641,7 @@ const ROUNDS = [
 {id:4, words:[
  {w:"うしろやすし", pos:"形", mean:"安心だ", expl:"『うしろめたし』の対義語で、後を任せても安心だという気持ちを表す。", mne:"『うしろめたし』とセットで対義語として覚える（不安⇔安心）。", ex:{t:"後見あればうしろやすし。",tr:"後見人がいるので安心だ。"}},
  {w:"うたてし", pos:"副／形動", mean:"いやな感じに・ますます（悪く）・情けなく", expl:"物事がどんどん悪い方向へ進んでいく、不快な変化を表す語。", mne:"『うたて』＝『うとましい方向へ移っていく』とイメージで覚える。", ex:{t:"うたてある世かな。",tr:"いやな感じの世の中だなあ。"}},
+ {w:"うつくし", pos:"形（シク活用）", mean:"かわいい・いとしい／きれいだ・立派だ", expl:"現代語『美しい』と違い、小さなもの・幼い者への愛情を伴う『かわいらしい』が中心義。中世以降に『きれいだ』の意が広がった。", mne:"『うつくし』＝まず『かわいい』。『きよらなり・めでたし』など美しさを表す語とは区別する。", ex:{t:"うつくしきもの。瓜にかきたるちごの顔。",tr:"かわいらしいもの。瓜に描いた幼児の顔。",s:"枕草子（うつくしきもの）"}},
  {w:"うつろふ", pos:"動（四段）", mean:"色あせる・衰える・心変わりする", expl:"花や葉の色が変化する様子から転じて、人の心が移り変わることも表す。", mne:"『移ろふ』＝『移る』が続く→色があせ、心も移っていく、と覚える。", ex:{t:"花の色のうつろふ。",tr:"花の色があせていく。"}},
  {w:"うるはし", pos:"形", mean:"端正だ・きちんとしている・立派だ", expl:"整然として乱れのない美しさを表す語で、単なる『美しい』より秩序を強調する。", mne:"現代語『麗しい』の語源で、『整った美しさ』とイメージする。", ex:{t:"うるはしき装束にてあり。",tr:"きちんと整った装束である。"}},
  {w:"うれふ", pos:"動（下二段）", mean:"嘆く・心配する・（正式に）訴える", expl:"心を痛めて嘆いたり、時に朝廷などへ正式に訴え出ることを表す。", mne:"『憂ふ』＝『憂い』を『訴える・嘆く』、と漢字から覚える。", ex:{t:"世をうれへて過ぐす。",tr:"世の中を嘆きながら過ごす。"}},
@@ -666,7 +689,7 @@ const ROUNDS = [
  {w:"かたらふ", pos:"動（四段）", mean:"親しく語り合う・言い寄る・仲間に引き入れる", expl:"単なる会話でなく、深く語り合う、または恋愛的に言い寄る意味を持つ。", mne:"『語る』の継続形『語らふ』＝繰り返し語り合う仲＝親密な関係、と覚える。", ex:{t:"男をかたらふ女なり。",tr:"男に言い寄る女である。"}},
 ]},
 {id:7, words:[
- {w:"かづく", pos:"動", mean:"（水を）かぶる／褒美を頭からかぶせる・与える", expl:"四段では『かぶる』、下二段では『褒美を与える』の意味になる。", mne:"『被（かづ）く』＝頭に被せる→自分が被れば『かぶる』、人に被せれば『与える』。", ex:{t:"褒美をかづく。",tr:"褒美を頂戴する。"}},
+ {w:"かづく", pos:"動", mean:"【四段】（水を）かぶる・（褒美を）いただく／【下二段】褒美を頭からかぶせる・与える", expl:"四段では『かぶる』、下二段では『褒美を与える』の意味になる。", mne:"『被（かづ）く』＝頭に被せる→自分が被れば『かぶる』、人に被せれば『与える』。", ex:{t:"褒美をかづく。",tr:"褒美を頂戴する。"}},
  {w:"かどかどし", pos:"形", mean:"才気がある・角が立つほど鋭い", expl:"知的で鋭さのある様子を表し、良い意味での才気煥発を指すことが多い。", mne:"『角（かど）』が立つほど鋭い才気、と漢字イメージで覚える。", ex:{t:"かどかどしき人にぞありける。",tr:"才気のある人であった。"}},
  {w:"かなし", pos:"形", mean:"いとしい・かわいい／悲しい", expl:"『愛し』と『悲し』の両方の漢字が当てられ、強い愛情と強い悲哀の両方を表す。", mne:"愛おしさが極まると悲しさにも通じる、と両義を一つの感情としてまとめて覚える。", ex:{t:"子をかなしと思ふ。",tr:"子をいとしいと思う。"}},
  {w:"かなしうす", pos:"動", mean:"かわいがる", expl:"『かなし（いとしい）』が動詞化した語で、愛情を注ぐ行為を表す。", mne:"『かなし』の動詞形と考え、『いとしく思って可愛がる』と覚える。", ex:{t:"わが子をかなしうす。",tr:"我が子をかわいがる。"}},
@@ -729,7 +752,7 @@ const ROUNDS = [
  {w:"たがふ", pos:"動（四段・下二段）", mean:"食い違う・背く／違える", expl:"物事が一致しない、約束などに背く様子を表す。", mne:"『違（たが）ふ』＝『違う』の古語、とそのまま覚える。", ex:{t:"約束にたがふ。",tr:"約束に背く。"}},
  {w:"たけし", pos:"形", mean:"勇猛だ・激しい・強い", expl:"武勇や勢いの強さ、猛々しさを表す形容詞。", mne:"『猛（たけ）し』＝『猛々しい』の語源、と漢字から覚える。", ex:{t:"たけき武士なり。",tr:"勇猛な武士である。"}},
  {w:"たてまつる", pos:"動（四段）", mean:"差し上げる（謙譲）／召し上がる・お召しになる（尊敬の補助）", expl:"物を献上する謙譲語として使われるほか、尊敬の補助動詞としても頻出する。", mne:"『奉（たてまつ）る』＝献上する、が基本、補助動詞の用法もセットで覚える。", ex:{t:"文をたてまつる。",tr:"手紙を差し上げる。"}},
- {w:"たのむ", pos:"動（四段・下二段）", mean:"頼りにする／頼りにさせる・あてにさせる", expl:"四段は自分が頼る意味、下二段は相手に自分を頼らせる（期待させる）意味になる点に注意。", mne:"活用の種類で意味が変わる語として『四段＝頼る／下二段＝頼らせる』とセットで覚える。", ex:{t:"後をたのむ。",tr:"後のことを頼みにさせる。"}},
+ {w:"たのむ", pos:"動（四段・下二段）", mean:"【四段】頼りにする／【下二段】頼りにさせる・あてにさせる", expl:"四段は自分が頼る意味、下二段は相手に自分を頼らせる（期待させる）意味になる点に注意。", mne:"活用の種類で意味が変わる語として『四段＝頼る／下二段＝頼らせる』とセットで覚える。", ex:{t:"後をたのむ。",tr:"後のことを頼みにさせる。"}},
  {w:"たふ", pos:"動（下二段）", mean:"堪える・こらえる・我慢できる", expl:"苦しみや感情を抑えて耐え忍ぶことを表す。", mne:"現代語『堪える（たえる）』の古い形、とそのまま覚える。", ex:{t:"涙もたへず。",tr:"涙もこらえきれない。"}},
  {w:"ためし", pos:"名", mean:"先例・前例", expl:"過去に同様のことがあった例を指す語。", mne:"『試し』ではなく『例（ためし）』＝先例、と現代語との違いに注意して覚える。", ex:{t:"ためしなきことなり。",tr:"先例のないことである。"}},
 ]},
@@ -1220,5 +1243,178 @@ buildRoundGrid();
 })();
 </script>
 <!-- ▲ ここまで -->
+<script>
+(function(){
+  const WEAK='苦手';
+  let weak=[]; try{weak=JSON.parse(localStorage.getItem('kobun_weak')||'[]');}catch(e){}
+  if(!Array.isArray(weak)) weak=[];
+  const saveWeak=()=>{try{localStorage.setItem('kobun_weak',JSON.stringify(weak));}catch(e){}};
+  let shuf=false; try{shuf=localStorage.getItem('kobun_shuffle')==='1';}catch(e){}
+  const WR={id:WEAK,words:[]}; ROUNDS.push(WR);
+  const lab=r=>r.id===WEAK?(WR.label||'苦手な単語'):'第'+numToKanji(r.id)+'回';
+  const src=r=>r._orig||r.words;
+  const norm=s=>String(s).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).toLowerCase();
+  const btn=(cls,txt)=>{const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=txt;return b;};
+
+  /* 回ごとのダイジェスト */
+  document.querySelectorAll('.round-btn').forEach((b,i)=>{
+    const r=ROUNDS[i]; if(!r) return;
+    const d=document.createElement('span'); d.className='dg';
+    d.textContent=r.words.slice(0,3).map(w=>w.w.replace(/（.*?）/g,'')).join('／')+'…';
+    b.appendChild(d);
+  });
+
+  /* スワイプ・矢印キー（右→左の読み順：左＝次） */
+  function goPage(d){
+    const ps=wordsContainer.querySelectorAll('.page');
+    const t=ps[Math.max(0,Math.min(ps.length-1,currentIndex+d))];
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  let sx=0,sy=0;
+  wordsContainer.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+  wordsContainer.addEventListener('touchend',e=>{
+    const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)>70&&Math.abs(dy)<45){
+      const f=e.target.closest&&e.target.closest('.tate-flow');
+      if(f&&f.scrollWidth>f.clientWidth+2) return;
+      goPage(dx>0?1:-1);
+    }
+  },{passive:true});
+  document.addEventListener('keydown',e=>{
+    if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if(!screens.words.classList.contains('active')||listOverlay.classList.contains('open')||so.classList.contains('open')) return;
+    if(e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();goPage(1);}
+    else if(e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();goPage(-1);}
+  },true);
+
+  /* 進捗表示・目次の見出し（苦手ラウンド対応） */
+  window.updateProgress=function(round,i){
+    currentIndex=i;
+    progressLabel.textContent=lab(round)+' ・ '+(i+1)+' / '+round.words.length;
+    progressFill.style.height=(((i+1)/round.words.length)*100)+'%';
+  };
+  const bgl=window.buildListGrid;
+  window.buildListGrid=function(r,a){bgl(r,a);listPanelTitle.textContent=lab(r)+' の 単語 一覧';};
+
+  /* 苦手チェック */
+  const wcount=()=>{const s=new Set(weak);let n=0;ROUNDS.forEach(r=>{if(r.id!==WEAK)src(r).forEach(w=>{if(s.has(w.w))n++;});});return n;};
+  const tb=btn('weak-title',''), gb=btn('round-btn weak-btn','');
+  document.querySelector('.title-stage').appendChild(tb);
+  roundGrid.insertBefore(gb,roundGrid.firstChild);
+  const subs=[];
+  function refresh(){
+    const n=wcount();
+    const sw=new Set(weak);
+    subs.forEach(o=>{const c=src(o.r).filter(w=>sw.has(w.w)).length;o.b.textContent='★苦手 '+c+'語';o.b.disabled=!c;});
+    tb.textContent='苦手な単語だけ（'+n+'語）';
+    tb.disabled=gb.disabled=!n;
+    gb.innerHTML='<span class="n">★苦手</span><span class="cnt">'+n+'語</span>';
+  }
+  function openWeak(rid){
+    const s=new Set(weak), ws=[];
+    ROUNDS.forEach(r=>{if(r.id!==WEAK&&(rid===undefined||r.id===rid))src(r).forEach(w=>{if(s.has(w.w))ws.push(w);});});
+    if(!ws.length) return;
+    WR.label=rid===undefined?'苦手な単語':'第'+numToKanji(rid)+'回の苦手';
+    WR.words=ws; WR._orig=null; openRound(WEAK);
+  }
+  tb.addEventListener('click',e=>{e.stopPropagation();openWeak();});
+  gb.addEventListener('click',()=>openWeak());
+  roundGrid.querySelectorAll('.round-btn:not(.weak-btn)').forEach((b,i)=>{
+    const r=ROUNDS[i]; if(!r) return;
+    const cell=document.createElement('div'); cell.className='round-cell';
+    roundGrid.insertBefore(cell,b); cell.appendChild(b);
+    const wb=btn('weak-sub',''); wb.addEventListener('click',()=>openWeak(r.id));
+    cell.appendChild(wb); subs.push({b:wb,r});
+  });
+
+  /* ランダム／検索ボタン */
+  const hd=document.createElement('div'); hd.className='hd-r';
+  const s1=btn('nav-list','検索'), sb=btn('nav-list','ランダム'), s2=btn('nav-list','検索');
+  hd.append(s1); document.querySelector('.rounds-header').appendChild(hd);
+  const anchor=document.getElementById('toggleQuiz')||document.getElementById('openList');
+  anchor.parentNode.insertBefore(s2,anchor);
+  anchor.parentNode.insertBefore(sb,anchor);
+  const syncS=()=>{sb.classList.toggle('on',shuf);sb.setAttribute('aria-pressed',String(shuf));}; syncS();
+  sb.addEventListener('click',()=>{shuf=!shuf;try{localStorage.setItem('kobun_shuffle',shuf?'1':'0');}catch(e){} syncS();if(currentRoundData)openRound(currentRoundData.id);});
+
+  /* 検索 */
+  const so=document.createElement('div'); so.className='list-overlay'; so.id='searchOverlay';
+  so.innerHTML='<div class="list-panel"><div class="list-panel-header"><input id="searchInput" type="search" placeholder="見出し語・意味で検索" autocomplete="off"><button class="nav-back" type="button" id="closeSearch">×</button></div><div class="list-grid" id="searchResults"></div></div>';
+  document.getElementById('app').appendChild(so);
+  const inp=so.querySelector('#searchInput'), res=so.querySelector('#searchResults');
+  function jump(id,word){
+    openRound(id);
+    const i=currentRoundData.words.findIndex(x=>x.w===word);
+    const p=wordsContainer.querySelectorAll('.page')[i];
+    if(p) setTimeout(()=>p.scrollIntoView({behavior:'instant',block:'start'}),30);
+  }
+  function closeS(){so.classList.remove('open');inp.blur();}
+  function run(){
+    const q=norm(inp.value.trim()); res.innerHTML='';
+    if(!q){res.innerHTML='<p class="sr-empty">見出し語や意味の一部を入力してください（全回を横断して検索します）。</p>';return;}
+    let n=0;
+    for(const r of ROUNDS){
+      if(r.id===WEAK) continue;
+      for(const w of src(r)){
+        if(n>=80) break;
+        if(norm(w.w).includes(q)||norm(w.mean).includes(q)){
+          n++;
+          const c=document.createElement('button'); c.type='button'; c.className='list-chip';
+          c.innerHTML='<span class="li-idx">'+lab(r)+'</span><span class="li-word">'+w.w+'</span><span class="li-mean">'+w.mean+'</span>';
+          c.addEventListener('click',()=>{closeS();jump(r.id,w.w);});
+          res.appendChild(c);
+        }
+      }
+    }
+    if(!n) res.innerHTML='<p class="sr-empty">見つかりませんでした。</p>';
+  }
+  function openS(){so.classList.add('open');inp.value='';run();setTimeout(()=>inp.focus(),60);}
+  s1.addEventListener('click',openS); s2.addEventListener('click',openS);
+  inp.addEventListener('input',run);
+  inp.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Escape')closeS();});
+  so.querySelector('#closeSearch').addEventListener('click',closeS);
+  so.addEventListener('click',e=>{if(e.target===so)closeS();});
+
+  /* 各カードに☆・どこをタップしても答えを開閉 */
+  function decorate(r){
+    wordsContainer.querySelectorAll('.page').forEach((p,i)=>{
+      const w=r.words[i]; if(!w) return;
+      const m=p.querySelector('.page-idx-mark');
+      if(m) m.textContent=lab(r)+' ・ '+(i+1)+' / '+r.words.length;
+      const st=btn('star-btn','');
+      const paint=()=>{const on=weak.includes(w.w);st.classList.toggle('on',on);st.textContent=on?'★':'☆';st.setAttribute('aria-label',on?'苦手に登録済み':'苦手に登録');};
+      paint();
+      st.addEventListener('click',e=>{
+        e.stopPropagation();
+        const k=weak.indexOf(w.w); if(k<0) weak.push(w.w); else weak.splice(k,1);
+        saveWeak(); paint(); refresh();
+      });
+      p.appendChild(st);
+      p.addEventListener('click',e=>{
+        if(e.target.closest('button')||!screens.words.classList.contains('quiz')) return;
+        e.stopPropagation();
+        p.classList.toggle('revealed');
+        const b=p.querySelector('.reveal-btn');
+        if(b) b.textContent=p.classList.contains('revealed')?'隠す':'こたえを見る';
+      },true);
+    });
+  }
+
+  /* ラウンドを開くとき：ランダム順の適用＋装飾 */
+  const base=window.openRound;
+  window.openRound=function(id){
+    const r=ROUNDS.find(x=>x.id===id);
+    if(r){
+      if(!r._orig) r._orig=r.words.slice();
+      const a=r._orig.slice();
+      if(shuf) for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+      r.words=a;
+    }
+    base(id);
+    if(r) decorate(r);
+  };
+  refresh();
+})();
+</script>
 </body>
 </html>
