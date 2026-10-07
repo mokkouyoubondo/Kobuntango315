@@ -532,6 +532,13 @@
 .weak-sub:disabled{opacity:.4;cursor:default}
 .restart-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(52px + env(safe-area-inset-bottom,0px));z-index:6;background:var(--shu);border:1px solid var(--shu);color:#fff;font-family:inherit;font-weight:700;font-size:1.05rem;letter-spacing:.15em;padding:14px 48px;border-radius:3px;cursor:pointer;white-space:nowrap}
 .page.last .reveal-btn{display:none}
+.words-container{scroll-behavior:auto}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body,button,.page{touch-action:manipulation}
+.chrome-right{min-width:0}
+.nav-list,.words-chrome .nav-back{white-space:nowrap;flex-shrink:0}
+#toggleQuiz{min-width:6em;text-align:center}
+.progress-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .page.last{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
 .page.last .tate-flow{max-height:calc(var(--vh,1vh)*100 - 188px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
 @media (max-width:480px){.progress-label{display:none}}
@@ -1318,9 +1325,16 @@ buildRoundGrid();
   function openWeak(rid){
     const s=new Set(weak), ws=[];
     ROUNDS.forEach(r=>{if(r.id!==WEAK&&(rid===undefined||r.id===rid))src(r).forEach(w=>{if(s.has(w.w))ws.push(w);});});
-    if(!ws.length) return;
+    if(!ws.length) return false;
+    WR.rid=rid;
     WR.label=rid===undefined?'苦手な単語':'第'+numToKanji(rid)+'回の苦手';
     WR.words=ws; WR._orig=null; openRound(WEAK);
+    return true;
+  }
+  function reopen(){
+    const c=currentRoundData; if(!c) return;
+    if(c.id===WEAK){ if(!openWeak(WR.rid)) showScreen('rounds'); }
+    else openRound(c.id);
   }
   gb.addEventListener('click',()=>openWeak());
   roundGrid.querySelectorAll('.round-btn:not(.weak-btn)').forEach((b,i)=>{
@@ -1339,7 +1353,7 @@ buildRoundGrid();
   anchor.parentNode.insertBefore(s2,anchor);
   anchor.parentNode.insertBefore(sb,anchor);
   const syncS=()=>{sb.classList.toggle('on',shuf);sb.setAttribute('aria-pressed',String(shuf));}; syncS();
-  sb.addEventListener('click',()=>{shuf=!shuf;try{localStorage.setItem('kobun_shuffle',shuf?'1':'0');}catch(e){} syncS();if(currentRoundData)openRound(currentRoundData.id);});
+  sb.addEventListener('click',()=>{shuf=!shuf;try{localStorage.setItem('kobun_shuffle',shuf?'1':'0');}catch(e){} syncS();reopen();});
 
   /* 検索 */
   const so=document.createElement('div'); so.className='list-overlay'; so.id='searchOverlay';
@@ -1397,7 +1411,7 @@ buildRoundGrid();
       if(i===r.words.length-1){
         p.classList.add('last');
         const rb=btn('restart-btn','最初から');
-        rb.addEventListener('click',e=>{e.stopPropagation();openRound(r.id);});
+        rb.addEventListener('click',e=>{e.stopPropagation();reopen();});
         p.appendChild(rb);
       }
       p.addEventListener('click',e=>{
@@ -1420,9 +1434,21 @@ buildRoundGrid();
       if(shuf) for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
       r.words=a;
     }
+    const wc=wordsContainer, pf=progressFill;
+    wc.style.scrollSnapType='none'; wc.style.scrollBehavior='auto'; pf.style.transition='none';
+    wc.scrollTop=0;
     base(id);
     if(r) decorate(r);
+    wc.scrollTop=0;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{wc.style.scrollSnapType='';wc.style.scrollBehavior='';pf.style.transition='';}));
   };
+  window.addEventListener('resize',()=>{
+    if(!screens.words.classList.contains('active')) return;
+    requestAnimationFrame(()=>{
+      const pg=wordsContainer.querySelectorAll('.page')[currentIndex];
+      if(pg) wordsContainer.scrollTop=pg.offsetTop;
+    });
+  });
   refresh();
 })();
 </script>
