@@ -530,7 +530,10 @@
 .weak-sub{background:var(--card);border:1px solid var(--line);color:var(--ai);font-family:inherit;font-weight:700;font-size:.74rem;letter-spacing:.04em;padding:8px 4px;border-radius:2px;cursor:pointer}
 .weak-sub:not(:disabled):hover{border-color:var(--ai)}
 .weak-sub:disabled{opacity:.4;cursor:default}
-.restart-btn{position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:6;background:var(--shu);border:1px solid var(--shu);color:#fff;font-family:inherit;font-weight:700;font-size:.85rem;letter-spacing:.1em;padding:8px 14px;border-radius:3px;cursor:pointer}
+.restart-btn{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(52px + env(safe-area-inset-bottom,0px));z-index:6;background:var(--shu);border:1px solid var(--shu);color:#fff;font-family:inherit;font-weight:700;font-size:1.05rem;letter-spacing:.15em;padding:14px 48px;border-radius:3px;cursor:pointer;white-space:nowrap}
+.page.last .reveal-btn{display:none}
+.page.last{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+.page.last .tate-flow{max-height:calc(var(--vh,1vh)*100 - 188px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
 @media (max-width:480px){.progress-label{display:none}}
 </style>
 </head>
@@ -1143,8 +1146,8 @@ buildRoundGrid();
 .reveal-btn{display:none;position:absolute;left:50%;bottom:calc(46px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:6;background:var(--card);border:1px solid var(--shu);color:var(--shu-deep);font-family:inherit;font-weight:700;font-size:.85rem;letter-spacing:.15em;padding:8px 22px;border-radius:3px;cursor:pointer}
 .quiz .reveal-btn{display:block}
 .quiz .tate-flow{cursor:pointer}
-.quiz .page:not(.revealed) .secret{color:transparent !important;background:rgba(74,66,53,.13);border-radius:3px;user-select:none;-webkit-user-select:none}
-.quiz .list-chip .li-mean{color:transparent;background:rgba(74,66,53,.13);border-radius:2px}
+.qm .page:not(.revealed) .sm,.qw .page:not(.revealed) .sw{color:transparent !important;background:rgba(74,66,53,.13);border-radius:3px;user-select:none;-webkit-user-select:none}
+.qm .list-chip .li-mean,.qw .list-chip .li-word{color:transparent;background:rgba(74,66,53,.13);border-radius:2px}
 </style>
 <script>
 (function(){
@@ -1160,8 +1163,9 @@ buildRoundGrid();
   fix('すさまじ',{ex:{t:'すさまじきもの、昼ほゆる犬。',tr:'興ざめなもの、それは昼に吠える犬。',s:'枕草子（すさまじきもの）'}});
 
   /* ---- 暗記モード ---- */
-  let quiz=false;
-  try{quiz=localStorage.getItem('kobun_quiz')==='1';}catch(e){}
+  let quiz=0;
+  try{quiz=Number(localStorage.getItem('kobun_quiz'))||0;}catch(e){}
+  if(quiz>2)quiz=0;
   const btn=document.createElement('button');
   btn.className='nav-list';btn.id='toggleQuiz';btn.type='button';btn.textContent='暗記';
   document.querySelector('.chrome-right').insertBefore(btn,document.getElementById('openList'));
@@ -1169,14 +1173,18 @@ buildRoundGrid();
   function label(p){const b=p.querySelector('.reveal-btn');if(b)b.textContent=p.classList.contains('revealed')?'隠す':'こたえを見る';}
   function reveal(p){if(!quiz||!p)return;p.classList.toggle('revealed');label(p);}
   function apply(){
-    screens.words.classList.toggle('quiz',quiz);
-    btn.classList.toggle('on',quiz);
-    btn.setAttribute('aria-pressed',String(quiz));
+    screens.words.classList.toggle('quiz',!!quiz);
+    screens.words.classList.toggle('qm',!!(quiz&1));
+    screens.words.classList.toggle('qw',!!(quiz&2));
+    btn.classList.toggle('on',!!quiz);
+    btn.setAttribute('aria-pressed',String(!!quiz));
+    btn.textContent=['暗記','意味隠し','単語隠し'][quiz];
     pagesOf().forEach(p=>{p.classList.remove('revealed');label(p);});
   }
   function enhance(){
     pagesOf().forEach(p=>{
-      p.querySelectorAll('.tate-meaning,.tate-block.expl,.tate-block.mne,.ex-trans').forEach(e=>e.classList.add('secret'));
+      p.querySelectorAll('.tate-meaning,.ex-trans,.tate-block.expl,.tate-block.mne').forEach(e=>e.classList.add('sm'));
+      p.querySelectorAll('.tate-headword,.ex-text,.tate-block.expl,.tate-block.mne').forEach(e=>e.classList.add('sw'));
       const b=document.createElement('button');
       b.type='button';b.className='reveal-btn';
       b.addEventListener('click',e=>{e.stopPropagation();reveal(p);});
@@ -1186,8 +1194,8 @@ buildRoundGrid();
     apply();
   }
   btn.addEventListener('click',()=>{
-    quiz=!quiz;
-    try{localStorage.setItem('kobun_quiz',quiz?'1':'0');}catch(e){}
+    quiz=(quiz+1)%3;
+    try{localStorage.setItem('kobun_quiz',String(quiz));}catch(e){}
     apply();btn.blur();
   });
   const open0=openRound;
@@ -1387,6 +1395,7 @@ buildRoundGrid();
       });
       p.appendChild(st);
       if(i===r.words.length-1){
+        p.classList.add('last');
         const rb=btn('restart-btn','最初から');
         rb.addEventListener('click',e=>{e.stopPropagation();openRound(r.id);});
         p.appendChild(rb);
