@@ -521,8 +521,6 @@
 .reveal-btn{font-size:1.05rem;padding:14px 38px;bottom:calc(52px + env(safe-area-inset-bottom,0px))}
 .star-btn{position:absolute;right:calc(18px + env(safe-area-inset-right,0px));top:calc(64px + env(safe-area-inset-top,0px));z-index:6;width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:var(--card);color:var(--gold);font-size:1.3rem;line-height:1;cursor:pointer;padding:0}
 .star-btn.on{background:var(--shu);border-color:var(--shu);color:#fff}
-.weak-title{display:block;margin:18px auto 0;background:var(--card);border:1px solid var(--gold);color:var(--shu-deep);font-family:inherit;font-weight:700;font-size:.85rem;letter-spacing:.1em;padding:10px 18px;border-radius:3px;cursor:pointer}
-.weak-title:disabled{opacity:.4;cursor:default}
 #searchOverlay{align-items:flex-start;z-index:30}
 #searchOverlay .list-panel{border-top:0;border-bottom:3px double var(--gold);border-radius:0 0 14px 14px;max-height:85%;transform:translateY(-24px)}
 #searchOverlay.open .list-panel{transform:none}
@@ -532,6 +530,7 @@
 .weak-sub{background:var(--card);border:1px solid var(--line);color:var(--ai);font-family:inherit;font-weight:700;font-size:.74rem;letter-spacing:.04em;padding:8px 4px;border-radius:2px;cursor:pointer}
 .weak-sub:not(:disabled):hover{border-color:var(--ai)}
 .weak-sub:disabled{opacity:.4;cursor:default}
+.restart-btn{position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:6;background:var(--shu);border:1px solid var(--shu);color:#fff;font-family:inherit;font-weight:700;font-size:.85rem;letter-spacing:.1em;padding:8px 14px;border-radius:3px;cursor:pointer}
 @media (max-width:480px){.progress-label{display:none}}
 </style>
 </head>
@@ -1298,16 +1297,14 @@ buildRoundGrid();
 
   /* 苦手チェック */
   const wcount=()=>{const s=new Set(weak);let n=0;ROUNDS.forEach(r=>{if(r.id!==WEAK)src(r).forEach(w=>{if(s.has(w.w))n++;});});return n;};
-  const tb=btn('weak-title',''), gb=btn('round-btn weak-btn','');
-  document.querySelector('.title-stage').appendChild(tb);
+  const gb=btn('round-btn weak-btn','');
   roundGrid.insertBefore(gb,roundGrid.firstChild);
   const subs=[];
   function refresh(){
     const n=wcount();
     const sw=new Set(weak);
     subs.forEach(o=>{const c=src(o.r).filter(w=>sw.has(w.w)).length;o.b.textContent='★苦手 '+c+'語';o.b.disabled=!c;});
-    tb.textContent='苦手な単語だけ（'+n+'語）';
-    tb.disabled=gb.disabled=!n;
+    gb.disabled=!n;
     gb.innerHTML='<span class="n">★苦手</span><span class="cnt">'+n+'語</span>';
   }
   function openWeak(rid){
@@ -1317,7 +1314,6 @@ buildRoundGrid();
     WR.label=rid===undefined?'苦手な単語':'第'+numToKanji(rid)+'回の苦手';
     WR.words=ws; WR._orig=null; openRound(WEAK);
   }
-  tb.addEventListener('click',e=>{e.stopPropagation();openWeak();});
   gb.addEventListener('click',()=>openWeak());
   roundGrid.querySelectorAll('.round-btn:not(.weak-btn)').forEach((b,i)=>{
     const r=ROUNDS[i]; if(!r) return;
@@ -1390,6 +1386,11 @@ buildRoundGrid();
         saveWeak(); paint(); refresh();
       });
       p.appendChild(st);
+      if(i===r.words.length-1){
+        const rb=btn('restart-btn','最初から');
+        rb.addEventListener('click',e=>{e.stopPropagation();openRound(r.id);});
+        p.appendChild(rb);
+      }
       p.addEventListener('click',e=>{
         if(e.target.closest('button')||!screens.words.classList.contains('quiz')) return;
         e.stopPropagation();
